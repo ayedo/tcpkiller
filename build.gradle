@@ -11,11 +11,17 @@ repositories {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    compile 'no.tornado:tornadofx:1.7.19'
+    implementation 'no.tornado:tornadofx:1.7.19'
+    implementation 'com.google.guava:guava:28.2-jre'
+    implementation 'io.reactivex:rxjavafx:2.0.2'
+    implementation "io.reactivex.rxjava3:rxjava:3.0.0"
 }
 
 compileKotlin {
     kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions {
+        freeCompilerArgs = ["-XXLanguage:+InlineClasses"]
+    }
 }
 compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"

@@ -1,32 +1,72 @@
 package ch.ayedo.portkiller
 
-import javafx.scene.paint.Color
-import javafx.scene.text.Font
+import io.reactivex.rxjava3.core.Observable
+import javafx.beans.value.ObservableValue
 import tornadofx.*
+import java.util.concurrent.TimeUnit.SECONDS
 
 class MainView : View() {
 
-    // alright so what's the plan?
-    // I want to have a box where I can enter a port number
-    // then it queries, and shows the process the listens on that port number
-    // -> we need to execute a command depending on the operating system
-    // maybe even do a jps to figure out which one it is?
-    // then we can kill it with a click
+    private val processView: ProcessTableView by inject()
 
-    //  if (System.getProperty("os.name").toLowerCase().indexOf("windows") > -1)
-
-    // ok, so I need to find out how to do something when somebody clicks on OK
     override val root = vbox {
-        label("Port")
-        textfield("8080")
-        button("OK") {
-            action {
-                "lsof -nP -i:8080 | grep LISTEN".execute()
+        add(processView)
+        hbox {
+            textfield {
+                promptText = "Filter Ports"
+                processView.filterByPort(textProperty())
+            }
+            button("End Task") {
+                action {
+                    processView.killSelectedProcess()
+                }
             }
         }
-        text("adid.exe") {
-            fill = Color.PURPLE
-            font = Font(20.0)
+    }
+}
+
+class ProcessTableView : View() {
+
+    private val processService = ProcessService(LsofNetworkUtility(), PsProcessUtility())
+
+    private val processTerminator = UnixKillProcessTerminator()
+
+    private val portBindings = processService.processPortBindings().asObservable()
+
+    private val sortedPortBindings = SortedFilteredList(portBindings)
+
+    private var selectedProcess: Process? = null
+
+    init {
+        Observable.interval(2, 2, SECONDS).subscribe({ onRefresh() })
+    }
+
+    override val root = tableview(sortedPortBindings) {
+        readonlyColumn("Port", PortBinding::port).cellFormat {
+            text = it.value.toString()
         }
+        readonlyColumn("Process", PortBinding::process).cellFormat {
+            text = it.processName.value
+        }
+        onUserSelect(clickCount = 1) {
+            selectedProcess = it.process
+        }
+    }
+
+    fun filterByPort(textProperty: ObservableValue<String>) {
+        sortedPortBindings.filterWhen(textProperty) { query, item ->
+            item.port.value.toString().startsWith(query)
+        }
+    }
+
+    fun killSelectedProcess() {
+        selectedProcess?.let { process ->
+            processTerminator.terminate(process.processId)
+            this.onRefresh()
+        }
+    }
+
+    override fun onRefresh() {
+        this.sortedPortBindings.asyncItems { processService.processPortBindings() }
     }
 }
