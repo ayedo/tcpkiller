@@ -27,7 +27,7 @@ class MainView : View() {
 
 class ProcessTableView : View() {
 
-    private val processService = ProcessService(LsofNetworkUtility(), PsProcessUtility())
+    private val processService = ProcessService(LsofNetworkUtility(), JpsProcessUtility(PsProcessUtility()))
 
     private val processTerminator = UnixKillProcessTerminator()
 
