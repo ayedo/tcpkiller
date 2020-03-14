@@ -1,5 +1,6 @@
-package ch.ayedo.portkiller
+package ch.ayedo.portkiller.services
 
+import ch.ayedo.portkiller.exec
 import java.nio.file.Paths
 
 interface ProcessUtility {
@@ -22,12 +23,15 @@ class PsProcessUtility : ProcessUtility {
             val columns = row.split(" ")
             val pid = columns[0].toInt()
             val name = columns[1]
-            ProcessId(pid) to ProcessName(name)
+            ProcessId(pid) to ProcessName(
+                name
+            )
         }).toMap()
     }
 }
 
-class JpsProcessUtility(private val processUtility: ProcessUtility) : ProcessUtility {
+class JpsProcessUtility(private val processUtility: ProcessUtility) :
+    ProcessUtility {
 
     override fun processNamesById(): Map<ProcessId, ProcessName> {
 
@@ -52,7 +56,9 @@ class JpsProcessUtility(private val processUtility: ProcessUtility) : ProcessUti
                 val name = columns[1]
 
                 if (name.isNotBlank()) {
-                    ProcessId(pid) to ProcessName("java ($name)")
+                    ProcessId(pid) to ProcessName(
+                        "java ($name)"
+                    )
                 } else {
                     null
                 }

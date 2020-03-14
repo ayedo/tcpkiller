@@ -1,8 +1,8 @@
-package ch.ayedo.portkiller
+package ch.ayedo.portkiller.services
 
+import ch.ayedo.portkiller.exec
 import com.google.common.net.HostAndPort
 import java.nio.file.Paths
-
 
 interface NetworkUtility {
     /**
@@ -40,7 +40,9 @@ class LsofNetworkUtility() : NetworkUtility {
                 val pid = columns[1].toInt()
                 val hostAndPort = HostAndPort.fromString(columns[8])
 
-                ProcessId(pid) to Port(hostAndPort.port)
+                ProcessId(pid) to Port(
+                    hostAndPort.port
+                )
             })
 
         // respect contract to return only one mapping for both IPv4 and IPv6

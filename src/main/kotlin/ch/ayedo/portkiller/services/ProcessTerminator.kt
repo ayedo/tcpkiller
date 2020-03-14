@@ -1,5 +1,6 @@
-package ch.ayedo.portkiller
+package ch.ayedo.portkiller.services
 
+import ch.ayedo.portkiller.exec
 import java.nio.file.Paths
 
 interface ProcessTerminator {

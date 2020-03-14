@@ -1,4 +1,4 @@
-package ch.ayedo.portkiller
+package ch.ayedo.portkiller.views
 
 import tornadofx.*
 
