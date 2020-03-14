@@ -1,19 +1,18 @@
 package ch.ayedo.portkiller.views
 
-import ch.ayedo.portkiller.services.*
+import ch.ayedo.portkiller.services.PortBinding
+import ch.ayedo.portkiller.services.Process
+import ch.ayedo.portkiller.services.ProcessService
+import ch.ayedo.portkiller.services.ProcessTerminator
 import io.reactivex.rxjava3.core.Observable
 import javafx.beans.value.ObservableValue
 import tornadofx.*
 import java.util.concurrent.TimeUnit
 
-class ProcessTableView : View() {
-
-    private val processService = ProcessService(
-        LsofNetworkUtility(),
-        JpsProcessUtility(PsProcessUtility())
-    )
-
-    private val processTerminator = UnixKillProcessTerminator()
+class ProcessTableView(
+    private val processService: ProcessService,
+    private val processTerminator: ProcessTerminator
+) : View() {
 
     private val portBindings = processService.processPortBindings().toList().asObservable()
 
