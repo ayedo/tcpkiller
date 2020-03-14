@@ -30,11 +30,11 @@ class ProcessTableView : View() {
 
     override val root = tableview(sortedPortBindings) {
         setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE)
-        readonlyColumn("Port", PortBinding::port).cellFormat {
-            text = it.value.toString()
+        readonlyColumn("Port", PortBinding::intPort).cellFormat {
+            text = it.toString()
         }
-        readonlyColumn("Process", PortBinding::process).cellFormat {
-            text = it.processName.value
+        readonlyColumn("Process", PortBinding::processName).cellFormat {
+            text = it
         }
         resizeColumnsToFitContent()
         onUserSelect(clickCount = 1) {

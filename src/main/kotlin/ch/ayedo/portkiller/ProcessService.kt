@@ -9,6 +9,11 @@ inline class ProcessName(val value: String)
 data class Process(val processId: ProcessId, val processName: ProcessName)
 
 data class PortBinding(val process: Process, val port: Port) {
+
+    val processName: String = process.processName.value
+
+    val intPort: Int = port.value
+
     override fun toString(): String =
         "PortBinding(processId=${process.processId.value}, processName=${process.processName.value}, port=$port)"
 }
