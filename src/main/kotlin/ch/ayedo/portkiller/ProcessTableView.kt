@@ -14,7 +14,7 @@ class ProcessTableView : View() {
 
     private val processTerminator = UnixKillProcessTerminator()
 
-    private val portBindings = processService.processPortBindings().asObservable()
+    private val portBindings = processService.processPortBindings().toList().asObservable()
 
     private val sortedPortBindings = SortedFilteredList(portBindings)
 
@@ -56,6 +56,6 @@ class ProcessTableView : View() {
     }
 
     override fun onRefresh() {
-        this.sortedPortBindings.asyncItems { processService.processPortBindings() }
+        this.sortedPortBindings.asyncItems { processService.processPortBindings().toList() }
     }
 }

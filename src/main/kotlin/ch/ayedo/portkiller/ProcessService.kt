@@ -15,7 +15,7 @@ data class PortBinding(val process: Process, val port: Port) {
 
 class ProcessService(private val networkUtility: NetworkUtility, private val processUtility: ProcessUtility) {
 
-    fun processPortBindings(): List<PortBinding> {
+    fun processPortBindings(): Iterable<PortBinding> {
 
         val pidsToPorts = networkUtility.processIdPortMappings()
 
