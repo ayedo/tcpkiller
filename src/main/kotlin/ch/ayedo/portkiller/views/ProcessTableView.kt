@@ -1,9 +1,9 @@
 package ch.ayedo.portkiller.views
 
 import ch.ayedo.portkiller.services.PortBinding
-import ch.ayedo.portkiller.services.Process
 import ch.ayedo.portkiller.services.ProcessService
 import ch.ayedo.portkiller.services.ProcessTerminator
+import com.google.common.collect.Sets
 import io.reactivex.rxjava3.core.Observable
 import javafx.beans.value.ObservableValue
 import tornadofx.*
@@ -18,14 +18,13 @@ class ProcessTableView(
 
     private val sortedPortBindings = SortedFilteredList(portBindings)
 
-    private var selectedProcess: Process? = null
-
     init {
         Observable.interval(
-            2,
-            2,
+            1,
+            1,
             TimeUnit.SECONDS
-        ).subscribe({ onRefresh() })
+        ).subscribe({ reloadBindings() })
+
     }
 
     override val root = tableview(sortedPortBindings) {
@@ -37,9 +36,6 @@ class ProcessTableView(
             text = it
         }
         resizeColumnsToFitContent()
-        onUserSelect(clickCount = 1) {
-            selectedProcess = it.process
-        }
     }
 
     fun filterByPort(textProperty: ObservableValue<String>) {
@@ -49,13 +45,23 @@ class ProcessTableView(
     }
 
     fun killSelectedProcess() {
-        selectedProcess?.let { process ->
-            processTerminator.terminate(process.processId)
-            this.onRefresh()
+        root.selectionModel.selectedItem?.let { binding ->
+            processTerminator.terminate(binding.process.processId)
+            this.reloadBindings()
         }
     }
 
-    override fun onRefresh() {
-        this.sortedPortBindings.asyncItems { processService.processPortBindings().toList() }
+    object PortBindingLock
+
+    private fun reloadBindings() {
+        synchronized(PortBindingLock) {
+            val previous = this.portBindings.toSet()
+            val current = processService.processPortBindings().toSet()
+            val toRemove = Sets.difference(previous, current)
+            val toAdd = Sets.difference(current, previous)
+            this.portBindings.removeAll(toRemove)
+            this.portBindings.addAll(toAdd)
+        }
+
     }
 }
