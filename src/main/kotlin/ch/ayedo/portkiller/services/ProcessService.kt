@@ -1,5 +1,7 @@
 package ch.ayedo.portkiller.services
 
+import ch.ayedo.portkiller.services.OperationSystem.*
+
 class ProcessService(private val networkUtility: NetworkUtility, private val processUtility: ProcessUtility) {
 
     fun processPortBindings(): Iterable<PortBinding> {
@@ -21,5 +23,36 @@ class ProcessService(private val networkUtility: NetworkUtility, private val pro
 
         })
 
+    }
+
+    companion object {
+
+        fun forOperationSystem(os: OperationSystem): ProcessService {
+
+            val toolFinder = ToolFinder.forOperationSystem(os)
+
+            fun requireTool(vararg names: String) {
+                for (name in names) {
+                    if (!toolFinder.toolExists(name)) {
+                        throw IllegalStateException("Cannot run required commandline tool: $name")
+                    }
+                }
+            }
+
+            val jpsExists = toolFinder.toolExists("jps")
+
+            return when (os) {
+                WINDOWS -> TODO()
+                MAC -> {
+                    requireTool("kill", "lsof")
+                    val processUtility = if (jpsExists) JpsProcessUtility(PsProcessUtility()) else PsProcessUtility()
+                    ProcessService(
+                        LsofNetworkUtility(),
+                        processUtility
+                    )
+                }
+                LINUX -> TODO()
+            }
+        }
     }
 }

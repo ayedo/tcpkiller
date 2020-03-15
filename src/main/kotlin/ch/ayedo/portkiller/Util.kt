@@ -28,13 +28,16 @@ infix fun File.exec(command: String): String {
  * ```
  */
 fun File.execute(vararg arguments: String): String {
+
     val process = ProcessBuilder(*arguments)
         .directory(this)
         .start()
-        .also { it.waitFor(10, TimeUnit.SECONDS) }
+
+    process.waitFor(10, TimeUnit.SECONDS)
 
     if (process.exitValue() != 0) {
         throw Exception(process.errorStream.bufferedReader().readText())
     }
+
     return process.inputStream.bufferedReader().readText()
 }

@@ -1,14 +1,13 @@
 package ch.ayedo.portkiller.views
 
-import ch.ayedo.portkiller.services.*
+import ch.ayedo.portkiller.services.OperationSystem
+import ch.ayedo.portkiller.services.ProcessService
+import ch.ayedo.portkiller.services.UnixKillProcessTerminator
 import tornadofx.*
 
 class MainView : View() {
 
-    private val processService = ProcessService(
-        LsofNetworkUtility(),
-        JpsProcessUtility(PsProcessUtility())
-    )
+    private val processService = ProcessService.forOperationSystem(OperationSystem.current())
 
     private val processTerminator = UnixKillProcessTerminator()
 
