@@ -14,10 +14,30 @@ class PsProcessUtility : ProcessUtility {
 
         val psResult = Paths.get(".").toFile() exec "ps -Ao pid,command -c"
 
-        val rows = psResult.split("\n")
+        val rows = psResult.lines()
             .drop(1)
             .dropLast(1)
             .map({ row -> row.trim() })
+
+        return rows.map({ row ->
+            val columns = row.split(" ")
+            val pid = columns[0].toInt()
+            val name = columns[1]
+            ProcessId(pid) to ProcessName(
+                name
+            )
+        }).toMap()
+    }
+}
+
+class TasklistProcessUtility : ProcessUtility {
+    override fun processNamesById(): Map<ProcessId, ProcessName> {
+        val tasklistResult = Paths.get(".").toFile() exec "tasklist /svc"
+
+        val rows = tasklistResult
+            .lines()
+            .drop(3)
+            .dropLast(1)
 
         return rows.map({ row ->
             val columns = row.split(" ")
@@ -46,7 +66,7 @@ class JpsProcessUtility(private val processUtility: ProcessUtility) :
 
         val jpsResult = Paths.get(".").toFile() exec "jps"
 
-        val rows = jpsResult.split("\n").dropLast(1)
+        val rows = jpsResult.lines().dropLast(1)
 
         val pidsToNames =
             rows.mapNotNull({ row ->

@@ -14,9 +14,9 @@ interface NetworkUtility {
     fun processIdPortMappings(): Iterable<Pair<ProcessId, Port>>
 }
 
-class LsofNetworkUtility() : NetworkUtility {
+private val whitespaceRegex = "\\s+".toRegex()
 
-    private val whitespaceRegex = "\\s+".toRegex()
+class LsofNetworkUtility() : NetworkUtility {
 
     override fun processIdPortMappings(): Iterable<Pair<ProcessId, Port>> {
 
@@ -26,16 +26,14 @@ class LsofNetworkUtility() : NetworkUtility {
         // LastPassH   453 ayedo    4u  IPv6 0x3b950fb5c09e6679      0t0  TCP [::1]:19536 (LISTEN)
 
         val portMappings = lsofResult
-            .split("\n")
+            .lines()
             // remove the column names from the output
             .drop(1)
             // remove empty line at the end of the output
             .dropLast(1)
-            // replace the non-uniformly spaced whitespaces between the columns with uniform tabs
-            .map({ row -> row.replace(whitespaceRegex, "\t") })
             // we are only interested in the pid, and the port
             .map({ row ->
-                val columns = row.split("\t")
+                val columns = row.split(whitespaceRegex)
 
                 val pid = columns[1].toInt()
                 val hostAndPort = HostAndPort.fromString(columns[8])
@@ -48,4 +46,40 @@ class LsofNetworkUtility() : NetworkUtility {
         // respect contract to return only one mapping for both IPv4 and IPv6
         return portMappings.toSet()
     }
+}
+
+class WindowsNetstatNetworkUtility : NetworkUtility {
+    override fun processIdPortMappings(): Iterable<Pair<ProcessId, Port>> {
+        
+        val netstatResult = Paths.get(".").toFile() exec "netstat -p TCP -anvo"
+
+        val portMappings = netstatResult
+            .lines()
+            .drop(4)
+            .map(String::trim)
+            .mapNotNull({ row ->
+                val columns = row.split(whitespaceRegex)
+
+                // special case: SystemEventsBroker
+                if (columns.size != 3) {
+                    return@mapNotNull null
+                }
+
+                val state = columns[3]
+
+                if (state.trim() != "LISTENING") {
+                    return@mapNotNull null
+                }
+
+                val pid = columns[4].toInt()
+                val hostAndPort = HostAndPort.fromString(columns[1])
+
+                ProcessId(pid) to Port(
+                    hostAndPort.port
+                )
+            })
+
+        return portMappings.toSet()
+    }
+
 }
