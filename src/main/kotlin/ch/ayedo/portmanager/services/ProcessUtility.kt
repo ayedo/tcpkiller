@@ -1,26 +1,25 @@
-package ch.ayedo.portkiller.services
+package ch.ayedo.portmanager.services
 
-import ch.ayedo.portkiller.exec
-import java.nio.file.Paths
+import ch.ayedo.portmanager.whitespaceRegex
+import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 
 interface ProcessUtility {
     fun processNamesById(): Map<ProcessId, ProcessName>
 }
 
-
-class PsProcessUtility : ProcessUtility {
+class PsProcessUtility(private val cmd: CommandLineRunner) : ProcessUtility {
 
     override fun processNamesById(): Map<ProcessId, ProcessName> {
 
-        val psResult = Paths.get(".").toFile() exec "ps -Ao pid,command -c"
+        val psResult = cmd.run("ps -Ao pid,command -c")
 
         val rows = psResult.lines()
             .drop(1)
             .dropLast(1)
-            .map({ row -> row.trim() })
+            .map(String::trim)
 
         return rows.map({ row ->
-            val columns = row.split(" ")
+            val columns = row.split(whitespaceRegex)
             val pid = columns[0].toInt()
             val name = columns[1]
             ProcessId(pid) to ProcessName(
@@ -30,19 +29,19 @@ class PsProcessUtility : ProcessUtility {
     }
 }
 
-class TasklistProcessUtility : ProcessUtility {
+class TasklistProcessUtility(private val cmd: CommandLineRunner) : ProcessUtility {
+
+    private val csvReader = csvReader()
+
     override fun processNamesById(): Map<ProcessId, ProcessName> {
-        val tasklistResult = Paths.get(".").toFile() exec "tasklist /svc"
+        val tasklistResult = cmd.run("tasklist /svc /fo csv")
 
-        val rows = tasklistResult
-            .lines()
-            .drop(3)
-            .dropLast(1)
+        val rows = csvReader.readAllWithHeader(tasklistResult)
 
         return rows.map({ row ->
-            val columns = row.split(" ")
-            val pid = columns[0].toInt()
-            val name = columns[1]
+            val pid = row.getValue("PID").toInt()
+            val name = row.getValue("Image Name")
+
             ProcessId(pid) to ProcessName(
                 name
             )
@@ -50,8 +49,10 @@ class TasklistProcessUtility : ProcessUtility {
     }
 }
 
-class JpsProcessUtility(private val processUtility: ProcessUtility) :
-    ProcessUtility {
+class JpsProcessUtility(
+    private val processUtility: ProcessUtility,
+    private val cmd: CommandLineRunner
+) : ProcessUtility {
 
     override fun processNamesById(): Map<ProcessId, ProcessName> {
 
@@ -64,11 +65,11 @@ class JpsProcessUtility(private val processUtility: ProcessUtility) :
 
     private fun jpsLookup(processId: ProcessId): ProcessName? {
 
-        val jpsResult = Paths.get(".").toFile() exec "jps"
+        val jpsResult = cmd.run("jps")
 
         val rows = jpsResult.lines().dropLast(1)
 
-        val pidsToNames =
+        val processIdsToNames =
             rows.mapNotNull({ row ->
 
                 val columns = row.split(" ")
@@ -84,7 +85,7 @@ class JpsProcessUtility(private val processUtility: ProcessUtility) :
                 }
             }).toMap()
 
-        return pidsToNames[processId]
+        return processIdsToNames[processId]
     }
 
 }

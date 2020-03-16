@@ -1,26 +1,25 @@
-package ch.ayedo.portkiller.services
+package ch.ayedo.portmanager.services
 
-import ch.ayedo.portkiller.exec
-import ch.ayedo.portkiller.services.OperationSystem.*
-import java.nio.file.Paths
+import ch.ayedo.portmanager.services.OperationSystem.*
 
 interface ToolFinder {
     fun toolExists(name: String): Boolean
 
     companion object {
         fun forOperationSystem(os: OperationSystem): ToolFinder {
+            val cmd = CommandLineRunner()
             return when (os) {
-                WINDOWS -> WhereToolFinder()
-                MAC, LINUX -> WhichToolFinder()
+                WINDOWS -> WhereToolFinder(cmd)
+                MAC, LINUX -> WhichToolFinder(cmd)
             }
         }
     }
 }
 
-class WhichToolFinder : ToolFinder {
+class WhichToolFinder(private val cmd: CommandLineRunner) : ToolFinder {
     override fun toolExists(name: String): Boolean {
         return try {
-            Paths.get(".").toFile() exec "which $name"
+            cmd.run("which $name")
             true
         } catch (ex: Exception) {
             false
@@ -28,10 +27,10 @@ class WhichToolFinder : ToolFinder {
     }
 }
 
-class WhereToolFinder : ToolFinder {
+class WhereToolFinder(private val cmd: CommandLineRunner) : ToolFinder {
     override fun toolExists(name: String): Boolean {
         return try {
-            Paths.get(".").toFile() exec "where.exe $name"
+            cmd.run("where.exe $name")
             true
         } catch (ex: Exception) {
             false

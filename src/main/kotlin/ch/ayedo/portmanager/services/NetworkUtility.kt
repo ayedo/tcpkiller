@@ -1,8 +1,9 @@
-package ch.ayedo.portkiller.services
+@file:Suppress("UnstableApiUsage")
 
-import ch.ayedo.portkiller.exec
+package ch.ayedo.portmanager.services
+
+import ch.ayedo.portmanager.whitespaceRegex
 import com.google.common.net.HostAndPort
-import java.nio.file.Paths
 
 interface NetworkUtility {
     /**
@@ -14,14 +15,11 @@ interface NetworkUtility {
     fun processIdPortMappings(): Iterable<Pair<ProcessId, Port>>
 }
 
-private val whitespaceRegex = "\\s+".toRegex()
-
-class LsofNetworkUtility() : NetworkUtility {
+class LsofNetworkUtility(private val cmd: CommandLineRunner) : NetworkUtility {
 
     override fun processIdPortMappings(): Iterable<Pair<ProcessId, Port>> {
 
-        val lsofResult = Paths.get(".").toFile() exec "lsof -a -itcp -nP -sTCP:LISTEN"
-
+        val lsofResult = cmd.run("lsof -a -itcp -nP -sTCP:LISTEN")
         // The expected result of running lsof is expected in the following example format:
         // LastPassH   453 ayedo    4u  IPv6 0x3b950fb5c09e6679      0t0  TCP [::1]:19536 (LISTEN)
 
@@ -48,10 +46,11 @@ class LsofNetworkUtility() : NetworkUtility {
     }
 }
 
-class WindowsNetstatNetworkUtility : NetworkUtility {
+class WindowsNetstatNetworkUtility(private val cmd: CommandLineRunner) : NetworkUtility {
+
     override fun processIdPortMappings(): Iterable<Pair<ProcessId, Port>> {
-        
-        val netstatResult = Paths.get(".").toFile() exec "netstat -p TCP -anvo"
+
+        val netstatResult = cmd.run("netstat -p TCP -anvo")
 
         val portMappings = netstatResult
             .lines()
@@ -60,8 +59,7 @@ class WindowsNetstatNetworkUtility : NetworkUtility {
             .mapNotNull({ row ->
                 val columns = row.split(whitespaceRegex)
 
-                // special case: SystemEventsBroker
-                if (columns.size != 3) {
+                if (columns.size != 5) {
                     return@mapNotNull null
                 }
 

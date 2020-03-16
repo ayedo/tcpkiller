@@ -1,4 +1,4 @@
-package ch.ayedo.portkiller.services
+package ch.ayedo.portmanager.services
 
 import com.sun.javafx.PlatformUtil
 

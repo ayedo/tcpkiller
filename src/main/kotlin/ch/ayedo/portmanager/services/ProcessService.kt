@@ -1,6 +1,6 @@
-package ch.ayedo.portkiller.services
+package ch.ayedo.portmanager.services
 
-import ch.ayedo.portkiller.services.OperationSystem.*
+import ch.ayedo.portmanager.services.OperationSystem.*
 
 class ProcessService(
     private val networkUtility: NetworkUtility,
@@ -15,7 +15,7 @@ class ProcessService(
 
         return pidsToPorts.map({ (processId, port) ->
 
-            val processName = pidsToNames.getValue(processId)
+            val processName = pidsToNames.getOrDefault(processId, ProcessName.notFound)
 
             val process = Process(
                 processId = processId,
@@ -44,21 +44,26 @@ class ProcessService(
 
             val jpsExists = toolFinder.toolExists("jps")
 
+            val cmd = CommandLineRunner()
+
             return when (os) {
                 WINDOWS -> {
                     requireTools("taskkill", "netstat")
                     val processUtility =
-                        if (jpsExists) JpsProcessUtility(TasklistProcessUtility()) else TasklistProcessUtility()
+                        if (jpsExists) JpsProcessUtility(TasklistProcessUtility(cmd), cmd) else TasklistProcessUtility(
+                            cmd
+                        )
                     ProcessService(
-                        WindowsNetstatNetworkUtility(),
+                        WindowsNetstatNetworkUtility(cmd),
                         processUtility
                     )
                 }
                 MAC -> {
                     requireTools("kill", "lsof")
-                    val processUtility = if (jpsExists) JpsProcessUtility(PsProcessUtility()) else PsProcessUtility()
+                    val processUtility =
+                        if (jpsExists) JpsProcessUtility(PsProcessUtility(cmd), cmd) else PsProcessUtility(cmd)
                     ProcessService(
-                        LsofNetworkUtility(),
+                        LsofNetworkUtility(cmd),
                         processUtility
                     )
                 }

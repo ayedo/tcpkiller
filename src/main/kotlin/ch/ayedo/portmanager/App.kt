@@ -1,6 +1,6 @@
-package ch.ayedo.portkiller
+package ch.ayedo.portmanager
 
-import ch.ayedo.portkiller.views.MainView
+import ch.ayedo.portmanager.views.MainView
 import javafx.stage.Stage
 import tornadofx.App
 

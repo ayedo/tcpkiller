@@ -1,8 +1,8 @@
-package ch.ayedo.portkiller.views
+package ch.ayedo.portmanager.views
 
-import ch.ayedo.portkiller.services.PortBinding
-import ch.ayedo.portkiller.services.ProcessService
-import ch.ayedo.portkiller.services.ProcessTerminator
+import ch.ayedo.portmanager.services.PortBinding
+import ch.ayedo.portmanager.services.ProcessService
+import ch.ayedo.portmanager.services.ProcessTerminator
 import com.google.common.collect.Sets
 import io.reactivex.rxjava3.core.Observable
 import javafx.beans.value.ObservableValue
