@@ -1,5 +1,6 @@
 package ch.ayedo.portmanager.services
 
+import ch.ayedo.portmanager.services.OperationSystem.*
 import ch.ayedo.portmanager.whitespaceRegex
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 
@@ -51,7 +52,8 @@ class TasklistProcessUtility(private val cmd: CommandLineRunner) : ProcessUtilit
 
 class JpsProcessUtility(
     private val processUtility: ProcessUtility,
-    private val cmd: CommandLineRunner
+    private val cmd: CommandLineRunner,
+    private val javaProcessName: String
 ) : ProcessUtility {
 
     override fun processNamesById(): Map<ProcessId, ProcessName> {
@@ -60,7 +62,7 @@ class JpsProcessUtility(
 
         return processNamesById.entries.associateBy(
             { it.key },
-            { if (it.value.value == "java") (jpsLookup(it.key) ?: it.value) else it.value })
+            { if (it.value.value == javaProcessName) (jpsLookup(it.key) ?: it.value) else it.value })
     }
 
     private fun jpsLookup(processId: ProcessId): ProcessName? {
@@ -86,6 +88,18 @@ class JpsProcessUtility(
             }).toMap()
 
         return processIdsToNames[processId]
+    }
+
+    companion object {
+
+        fun create(
+            os: OperationSystem,
+            processUtility: ProcessUtility,
+            cmd: CommandLineRunner
+        ): JpsProcessUtility = when (os) {
+            WINDOWS -> JpsProcessUtility(processUtility, cmd, "java.exe")
+            MAC, LINUX -> JpsProcessUtility(processUtility, cmd, "java")
+        }
     }
 
 }

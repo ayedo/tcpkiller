@@ -49,10 +49,14 @@ class ProcessService(
             return when (os) {
                 WINDOWS -> {
                     requireTools("taskkill", "netstat")
+
+                    val tasklist = TasklistProcessUtility(cmd)
+
                     val processUtility =
-                        if (jpsExists) JpsProcessUtility(TasklistProcessUtility(cmd), cmd) else TasklistProcessUtility(
-                            cmd
-                        )
+                        if (jpsExists) {
+                            JpsProcessUtility.create(os, tasklist, cmd)
+                        } else tasklist
+
                     ProcessService(
                         WindowsNetstatNetworkUtility(cmd),
                         processUtility
@@ -60,8 +64,14 @@ class ProcessService(
                 }
                 MAC -> {
                     requireTools("kill", "lsof")
+
+                    val ps = PsProcessUtility(cmd)
+
                     val processUtility =
-                        if (jpsExists) JpsProcessUtility(PsProcessUtility(cmd), cmd) else PsProcessUtility(cmd)
+                        if (jpsExists) {
+                            JpsProcessUtility.create(os, ps, cmd)
+                        } else ps
+
                     ProcessService(
                         LsofNetworkUtility(cmd),
                         processUtility
