@@ -32,6 +32,8 @@ class ProcessTableView(private val processService: ProcessService) : View() {
             text = it.processName.value
         }
         resizeColumnsToFitContent()
+
+        placeholder = label("No processes found")
     }
 
     fun filterByPort(textProperty: ObservableValue<String>) {
