@@ -13,22 +13,22 @@ interface ProcessUtility {
         fun forOperationSystem(
             os: OperationSystem,
             runner: CommandLineRunner,
-            toolFinder: ToolFinder
+            toolUtility: ToolUtility
         ): ProcessUtility {
 
             val processUtility =
                 when (os) {
-                    WINDOWS -> TasklistProcessUtility(runner, toolFinder)
-                    MAC, LINUX -> PsProcessUtility(runner, toolFinder)
+                    WINDOWS -> TasklistProcessUtility(runner, toolUtility)
+                    MAC, LINUX -> PsProcessUtility(runner, toolUtility)
                 }
 
-            val jpsExists = toolFinder.toolExists("jps")
+            val jpsExists = toolUtility.toolExists("jps")
 
             if (!jpsExists) {
                 return processUtility
             }
 
-            return JpsProcessUtility.wrap(os, processUtility, runner, toolFinder)
+            return JpsProcessUtility.wrap(os, processUtility, runner, toolUtility)
         }
 
     }
@@ -37,11 +37,11 @@ interface ProcessUtility {
 
 class PsProcessUtility(
     private val runner: CommandLineRunner,
-    toolFinder: ToolFinder
+    toolUtility: ToolUtility
 ) : ProcessUtility {
 
     init {
-        toolFinder.requireTool("ps")
+        toolUtility.requireTool("ps")
     }
 
     override fun processNamesById(): Map<ProcessId, ProcessName> {
@@ -66,11 +66,11 @@ class PsProcessUtility(
 
 class TasklistProcessUtility(
     private val runner: CommandLineRunner,
-    toolFinder: ToolFinder
+    toolUtility: ToolUtility
 ) : ProcessUtility {
 
     init {
-        toolFinder.requireTool("tasklist")
+        toolUtility.requireTool("tasklist")
     }
 
     private val csvReader = csvReader()
@@ -95,11 +95,11 @@ class JpsProcessUtility(
     private val processUtility: ProcessUtility,
     private val runner: CommandLineRunner,
     private val javaProcessName: String,
-    toolFinder: ToolFinder
+    toolUtility: ToolUtility
 ) : ProcessUtility {
 
     init {
-        toolFinder.requireTool("jps")
+        toolUtility.requireTool("jps")
     }
 
     override fun processNamesById(): Map<ProcessId, ProcessName> {
@@ -142,10 +142,10 @@ class JpsProcessUtility(
             os: OperationSystem,
             processUtility: ProcessUtility,
             runner: CommandLineRunner,
-            toolFinder: ToolFinder
+            toolUtility: ToolUtility
         ): JpsProcessUtility = when (os) {
-            WINDOWS -> JpsProcessUtility(processUtility, runner, "java.exe", toolFinder)
-            MAC, LINUX -> JpsProcessUtility(processUtility, runner, "java", toolFinder)
+            WINDOWS -> JpsProcessUtility(processUtility, runner, "java.exe", toolUtility)
+            MAC, LINUX -> JpsProcessUtility(processUtility, runner, "java", toolUtility)
         }
     }
 

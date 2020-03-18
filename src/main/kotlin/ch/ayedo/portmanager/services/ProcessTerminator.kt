@@ -10,22 +10,22 @@ interface ProcessTerminator {
         fun forOperationSystem(
             os: OperationSystem,
             runner: CommandLineRunner,
-            toolFinder: ToolFinder
+            toolUtility: ToolUtility
         ): ProcessTerminator =
             when (os) {
-                WINDOWS -> WindowsTaskKillProcessTerminator(runner, toolFinder)
-                LINUX, MAC -> UnixKillProcessTerminator(runner, toolFinder)
+                WINDOWS -> WindowsTaskKillProcessTerminator(runner, toolUtility)
+                LINUX, MAC -> UnixKillProcessTerminator(runner, toolUtility)
             }
     }
 }
 
 class UnixKillProcessTerminator(
     private val runner: CommandLineRunner,
-    toolFinder: ToolFinder
+    toolUtility: ToolUtility
 ) : ProcessTerminator {
 
     init {
-        toolFinder.requireTool("kill")
+        toolUtility.requireTool("kill")
     }
 
     override fun terminate(processId: ProcessId) {
@@ -35,11 +35,11 @@ class UnixKillProcessTerminator(
 
 class WindowsTaskKillProcessTerminator(
     private val runner: CommandLineRunner,
-    toolFinder: ToolFinder
+    toolUtility: ToolUtility
 ) : ProcessTerminator {
 
     init {
-        toolFinder.requireTool("taskkill")
+        toolUtility.requireTool("taskkill")
     }
 
     override fun terminate(processId: ProcessId) {

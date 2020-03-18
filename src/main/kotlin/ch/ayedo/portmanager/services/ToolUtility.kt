@@ -6,7 +6,7 @@ import org.zeroturnaround.exec.InvalidExitValueException
 class RequiredToolNotFoundException(name: String) :
     IllegalStateException("Cannot find required commandline tool: $name")
 
-interface ToolFinder {
+interface ToolUtility {
 
     fun toolExists(name: String): Boolean
 
@@ -17,15 +17,15 @@ interface ToolFinder {
     }
 
     companion object {
-        fun forOperationSystem(os: OperationSystem, runner: CommandLineRunner): ToolFinder =
+        fun forOperationSystem(os: OperationSystem, runner: CommandLineRunner): ToolUtility =
             when (os) {
-                WINDOWS -> WhereToolFinder(runner)
-                MAC, LINUX -> WhichToolFinder(runner)
+                WINDOWS -> WhereToolUtility(runner)
+                MAC, LINUX -> WhichToolUtility(runner)
             }
     }
 }
 
-class WhichToolFinder(private val runner: CommandLineRunner) : ToolFinder {
+class WhichToolUtility(private val runner: CommandLineRunner) : ToolUtility {
     override fun toolExists(name: String): Boolean {
         return try {
             runner.run("which $name")
@@ -36,7 +36,7 @@ class WhichToolFinder(private val runner: CommandLineRunner) : ToolFinder {
     }
 }
 
-class WhereToolFinder(private val runner: CommandLineRunner) : ToolFinder {
+class WhereToolUtility(private val runner: CommandLineRunner) : ToolUtility {
     override fun toolExists(name: String): Boolean {
         return try {
             runner.run("where.exe $name")

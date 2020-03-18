@@ -39,7 +39,7 @@ class ProcessService(
 
             val runner = CommandLineRunner()
 
-            val toolFinder = ToolFinder.forOperationSystem(os, runner)
+            val toolFinder = ToolUtility.forOperationSystem(os, runner)
 
             val processTerminator = ProcessTerminator.forOperationSystem(os, runner, toolFinder)
 
