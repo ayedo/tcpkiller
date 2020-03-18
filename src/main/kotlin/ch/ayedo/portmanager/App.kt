@@ -1,6 +1,7 @@
 package ch.ayedo.portmanager
 
 import ch.ayedo.portmanager.views.MainView
+import javafx.scene.image.Image
 import javafx.stage.Stage
 import tornadofx.App
 
@@ -12,6 +13,9 @@ class PortManager : App(MainView::class) {
             height = 600.0
             title = "Port Manager"
         }
+        
+        stage.icons.add(Image(this::class.java.getResourceAsStream("/logo.png")));
+
         super.start(stage)
     }
 }
