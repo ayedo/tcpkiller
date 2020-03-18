@@ -2,24 +2,32 @@ package ch.ayedo.portmanager.services
 
 import ch.ayedo.portmanager.services.OperationSystem.*
 
+class RequiredToolNotFoundException(name: String) :
+    IllegalStateException("Cannot find required commandline tool: $name")
+
 interface ToolFinder {
+
     fun toolExists(name: String): Boolean
 
-    companion object {
-        fun forOperationSystem(os: OperationSystem): ToolFinder {
-            val cmd = CommandLineRunner()
-            return when (os) {
-                WINDOWS -> WhereToolFinder(cmd)
-                MAC, LINUX -> WhichToolFinder(cmd)
-            }
+    fun requireTool(name: String) {
+        if (!toolExists(name)) {
+            throw RequiredToolNotFoundException(name)
         }
+    }
+
+    companion object {
+        fun forOperationSystem(os: OperationSystem, runner: CommandLineRunner): ToolFinder =
+            when (os) {
+                WINDOWS -> WhereToolFinder(runner)
+                MAC, LINUX -> WhichToolFinder(runner)
+            }
     }
 }
 
-class WhichToolFinder(private val cmd: CommandLineRunner) : ToolFinder {
+class WhichToolFinder(private val runner: CommandLineRunner) : ToolFinder {
     override fun toolExists(name: String): Boolean {
         return try {
-            cmd.run("which $name")
+            runner.run("which $name")
             true
         } catch (ex: Exception) {
             false
@@ -27,10 +35,10 @@ class WhichToolFinder(private val cmd: CommandLineRunner) : ToolFinder {
     }
 }
 
-class WhereToolFinder(private val cmd: CommandLineRunner) : ToolFinder {
+class WhereToolFinder(private val runner: CommandLineRunner) : ToolFinder {
     override fun toolExists(name: String): Boolean {
         return try {
-            cmd.run("where.exe $name")
+            runner.run("where.exe $name")
             true
         } catch (ex: Exception) {
             false

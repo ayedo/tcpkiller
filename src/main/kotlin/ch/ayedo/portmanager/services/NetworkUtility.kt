@@ -2,6 +2,7 @@
 
 package ch.ayedo.portmanager.services
 
+import ch.ayedo.portmanager.services.OperationSystem.*
 import ch.ayedo.portmanager.whitespaceRegex
 import com.google.common.net.HostAndPort
 
@@ -13,13 +14,22 @@ interface NetworkUtility {
      * IMPORTANT: If an Process is listening on both IPv4 and IPv6 only one mapping is expected to be returned
      * **/
     fun processIdPortMappings(): Iterable<Pair<ProcessId, Port>>
+
+    companion object {
+
+        fun forOperationSystem(os: OperationSystem, runner: CommandLineRunner): NetworkUtility =
+            when (os) {
+                WINDOWS -> WindowsNetstatNetworkUtility(runner)
+                MAC, LINUX -> LsofNetworkUtility(runner)
+            }
+    }
 }
 
-class LsofNetworkUtility(private val cmd: CommandLineRunner) : NetworkUtility {
+class LsofNetworkUtility(private val runner: CommandLineRunner) : NetworkUtility {
 
     override fun processIdPortMappings(): Iterable<Pair<ProcessId, Port>> {
 
-        val lsofResult = cmd.run("lsof -a -itcp -nP -sTCP:LISTEN")
+        val lsofResult = runner.run("lsof -a -itcp -nP -sTCP:LISTEN")
         // The expected result of running lsof is expected in the following example format:
         // LastPassH   453 ayedo    4u  IPv6 0x3b950fb5c09e6679      0t0  TCP [::1]:19536 (LISTEN)
 
@@ -46,11 +56,11 @@ class LsofNetworkUtility(private val cmd: CommandLineRunner) : NetworkUtility {
     }
 }
 
-class WindowsNetstatNetworkUtility(private val cmd: CommandLineRunner) : NetworkUtility {
+class WindowsNetstatNetworkUtility(private val runner: CommandLineRunner) : NetworkUtility {
 
     override fun processIdPortMappings(): Iterable<Pair<ProcessId, Port>> {
 
-        val netstatResult = cmd.run("netstat -p TCP -anvo")
+        val netstatResult = runner.run("netstat -p TCP -anvo")
 
         val portMappings = netstatResult
             .lines()

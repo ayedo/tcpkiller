@@ -1,7 +1,5 @@
 package ch.ayedo.portmanager.services
 
-import ch.ayedo.portmanager.services.OperationSystem.*
-
 class ProcessService(
     private val networkUtility: NetworkUtility,
     private val processUtility: ProcessUtility
@@ -30,55 +28,18 @@ class ProcessService(
 
     companion object {
 
-        fun forOperationSystem(os: OperationSystem): ProcessService {
+        fun forOperationSystem(os: OperationSystem, runner: CommandLineRunner): ProcessService {
 
-            val toolFinder = ToolFinder.forOperationSystem(os)
+            val toolFinder = ToolFinder.forOperationSystem(os, runner)
 
-            fun requireTools(vararg names: String) {
-                for (name in names) {
-                    if (!toolFinder.toolExists(name)) {
-                        throw IllegalStateException("Cannot run required commandline tool: $name")
-                    }
-                }
-            }
+            val processUtility = ProcessUtility.forOperationSystem(os, runner, toolFinder)
 
-            val jpsExists = toolFinder.toolExists("jps")
+            val networkUtility = NetworkUtility.forOperationSystem(os, runner)
 
-            val cmd = CommandLineRunner()
-
-            return when (os) {
-                WINDOWS -> {
-                    requireTools("taskkill", "netstat")
-
-                    val tasklist = TasklistProcessUtility(cmd)
-
-                    val processUtility =
-                        if (jpsExists) {
-                            JpsProcessUtility.create(os, tasklist, cmd)
-                        } else tasklist
-
-                    ProcessService(
-                        WindowsNetstatNetworkUtility(cmd),
-                        processUtility
-                    )
-                }
-                MAC -> {
-                    requireTools("kill", "lsof")
-
-                    val ps = PsProcessUtility(cmd)
-
-                    val processUtility =
-                        if (jpsExists) {
-                            JpsProcessUtility.create(os, ps, cmd)
-                        } else ps
-
-                    ProcessService(
-                        LsofNetworkUtility(cmd),
-                        processUtility
-                    )
-                }
-                LINUX -> TODO()
-            }
+            return ProcessService(
+                networkUtility,
+                processUtility
+            )
         }
     }
 }

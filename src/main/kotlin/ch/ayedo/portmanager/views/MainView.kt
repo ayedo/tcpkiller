@@ -1,5 +1,6 @@
 package ch.ayedo.portmanager.views
 
+import ch.ayedo.portmanager.services.CommandLineRunner
 import ch.ayedo.portmanager.services.OperationSystem
 import ch.ayedo.portmanager.services.ProcessService
 import ch.ayedo.portmanager.services.ProcessTerminator
@@ -9,9 +10,11 @@ class MainView : View() {
 
     private val os = OperationSystem.current()
 
-    private val processService = ProcessService.forOperationSystem(os)
+    private val runner = CommandLineRunner()
 
-    private val processTerminator = ProcessTerminator.forOperationSystem(os)
+    private val processService = ProcessService.forOperationSystem(os, runner)
+
+    private val processTerminator = ProcessTerminator.forOperationSystem(os, runner)
 
     private val processView = ProcessTableView(processService, processTerminator)
 

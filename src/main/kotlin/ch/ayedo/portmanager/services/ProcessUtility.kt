@@ -5,14 +5,53 @@ import ch.ayedo.portmanager.whitespaceRegex
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 
 interface ProcessUtility {
+
     fun processNamesById(): Map<ProcessId, ProcessName>
+
+    companion object {
+
+        fun forOperationSystem(
+            os: OperationSystem,
+            runner: CommandLineRunner,
+            toolFinder: ToolFinder
+        ): ProcessUtility {
+
+            val processUtility =
+                when (os) {
+                    WINDOWS -> TasklistProcessUtility(runner, toolFinder)
+                    MAC, LINUX -> PsProcessUtility(runner, toolFinder)
+                }
+
+            val jpsExists = toolFinder.toolExists("jps")
+
+            if (!jpsExists) {
+                return processUtility
+            }
+
+            return JpsProcessUtility.wrap(
+                os = os,
+                processUtility = processUtility,
+                runner = runner,
+                toolFinder = toolFinder
+            )
+        }
+
+    }
+
 }
 
-class PsProcessUtility(private val cmd: CommandLineRunner) : ProcessUtility {
+class PsProcessUtility(
+    private val runner: CommandLineRunner,
+    toolFinder: ToolFinder
+) : ProcessUtility {
+
+    init {
+        toolFinder.requireTool("ps")
+    }
 
     override fun processNamesById(): Map<ProcessId, ProcessName> {
 
-        val psResult = cmd.run("ps -Ao pid,command -c")
+        val psResult = runner.run("ps -Ao pid,command -c")
 
         val rows = psResult.lines()
             .drop(1)
@@ -30,12 +69,19 @@ class PsProcessUtility(private val cmd: CommandLineRunner) : ProcessUtility {
     }
 }
 
-class TasklistProcessUtility(private val cmd: CommandLineRunner) : ProcessUtility {
+class TasklistProcessUtility(
+    private val runner: CommandLineRunner,
+    toolFinder: ToolFinder
+) : ProcessUtility {
+
+    init {
+        toolFinder.requireTool("tasklist")
+    }
 
     private val csvReader = csvReader()
 
     override fun processNamesById(): Map<ProcessId, ProcessName> {
-        val tasklistResult = cmd.run("tasklist /svc /fo csv")
+        val tasklistResult = runner.run("tasklist /svc /fo csv")
 
         val rows = csvReader.readAllWithHeader(tasklistResult)
 
@@ -52,9 +98,14 @@ class TasklistProcessUtility(private val cmd: CommandLineRunner) : ProcessUtilit
 
 class JpsProcessUtility(
     private val processUtility: ProcessUtility,
-    private val cmd: CommandLineRunner,
-    private val javaProcessName: String
+    private val runner: CommandLineRunner,
+    private val javaProcessName: String,
+    toolFinder: ToolFinder
 ) : ProcessUtility {
+
+    init {
+        toolFinder.requireTool("jps")
+    }
 
     override fun processNamesById(): Map<ProcessId, ProcessName> {
 
@@ -67,7 +118,7 @@ class JpsProcessUtility(
 
     private fun jpsLookup(processId: ProcessId): ProcessName? {
 
-        val jpsResult = cmd.run("jps")
+        val jpsResult = runner.run("jps")
 
         val rows = jpsResult.lines().dropLast(1)
 
@@ -80,7 +131,7 @@ class JpsProcessUtility(
 
                 if (name.isNotBlank()) {
                     ProcessId(pid) to ProcessName(
-                        "java ($name)"
+                        "$javaProcessName ($name)"
                     )
                 } else {
                     null
@@ -92,13 +143,14 @@ class JpsProcessUtility(
 
     companion object {
 
-        fun create(
+        fun wrap(
             os: OperationSystem,
             processUtility: ProcessUtility,
-            cmd: CommandLineRunner
+            runner: CommandLineRunner,
+            toolFinder: ToolFinder
         ): JpsProcessUtility = when (os) {
-            WINDOWS -> JpsProcessUtility(processUtility, cmd, "java.exe")
-            MAC, LINUX -> JpsProcessUtility(processUtility, cmd, "java")
+            WINDOWS -> JpsProcessUtility(processUtility, runner, "java.exe", toolFinder)
+            MAC, LINUX -> JpsProcessUtility(processUtility, runner, "java", toolFinder)
         }
     }
 
