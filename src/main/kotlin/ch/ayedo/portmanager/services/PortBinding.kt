@@ -1,21 +1,22 @@
 package ch.ayedo.portmanager.services
 
-inline class Port(val value: Int)
+inline class Port(val value: Int) : Comparable<Port> {
+    override fun compareTo(other: Port) = value.compareTo(other.value)
+}
 
-inline class ProcessId(val value: Int)
+inline class ProcessId(val value: Int) : Comparable<ProcessId> {
+    override fun compareTo(other: ProcessId) = value.compareTo(other.value)
+}
 
-inline class ProcessName(val value: String) {
+inline class ProcessName(val value: String) : Comparable<ProcessName> {
+
     companion object {
         val notFound = ProcessName("<< Process name not found >>")
     }
+
+    override fun compareTo(other: ProcessName) = value.compareTo(other.value)
 }
 
 data class Process(val processId: ProcessId, val processName: ProcessName)
 
-data class PortBinding(val process: Process, val port: Port) {
-
-    val processName: String = process.processName.value
-
-    val intPort: Int = port.value
-
-}
+data class PortBinding(val process: Process, val port: Port)
