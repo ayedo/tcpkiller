@@ -1,21 +1,13 @@
 package ch.ayedo.portmanager.views
 
-import ch.ayedo.portmanager.services.*
+import ch.ayedo.portmanager.services.ProcessService
 import tornadofx.*
 
 class MainView : View() {
 
-    private val runner = CommandLineRunner()
+    private val processService = ProcessService.forCurrentOperationSystem()
 
-    private val os = OperationSystem.current()
-
-    private val toolFinder = ToolFinder.forOperationSystem(os, runner)
-
-    private val processService = ProcessService.forOperationSystem(os, runner, toolFinder)
-
-    private val processTerminator = ProcessTerminator.forOperationSystem(os, runner, toolFinder)
-
-    private val processView = ProcessTableView(processService, processTerminator)
+    private val processView = ProcessTableView(processService)
 
     override val root = vbox(10) {
 

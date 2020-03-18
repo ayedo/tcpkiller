@@ -2,17 +2,13 @@ package ch.ayedo.portmanager.views
 
 import ch.ayedo.portmanager.services.PortBinding
 import ch.ayedo.portmanager.services.ProcessService
-import ch.ayedo.portmanager.services.ProcessTerminator
 import com.google.common.collect.Sets
 import io.reactivex.rxjava3.core.Observable
 import javafx.beans.value.ObservableValue
 import tornadofx.*
 import java.util.concurrent.TimeUnit
 
-class ProcessTableView(
-    private val processService: ProcessService,
-    private val processTerminator: ProcessTerminator
-) : View() {
+class ProcessTableView(private val processService: ProcessService) : View() {
 
     private val portBindings = processService.processPortBindings().toList().asObservable()
 
@@ -46,7 +42,7 @@ class ProcessTableView(
 
     fun killSelectedProcess() {
         root.selectionModel.selectedItem?.let { binding ->
-            processTerminator.terminate(binding.process.processId)
+            processService.terminate(binding.process.processId)
             this.reloadBindings()
         }
     }

@@ -28,12 +28,7 @@ interface ProcessUtility {
                 return processUtility
             }
 
-            return JpsProcessUtility.wrap(
-                os = os,
-                processUtility = processUtility,
-                runner = runner,
-                toolFinder = toolFinder
-            )
+            return JpsProcessUtility.wrap(os, processUtility, runner, toolFinder)
         }
 
     }
