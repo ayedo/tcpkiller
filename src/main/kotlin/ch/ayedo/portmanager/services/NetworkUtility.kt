@@ -17,15 +17,22 @@ interface NetworkUtility {
 
     companion object {
 
-        fun forOperationSystem(os: OperationSystem, runner: CommandLineRunner): NetworkUtility =
+        fun forOperationSystem(os: OperationSystem, runner: CommandLineRunner, toolFinder: ToolFinder): NetworkUtility =
             when (os) {
-                WINDOWS -> WindowsNetstatNetworkUtility(runner)
-                MAC, LINUX -> LsofNetworkUtility(runner)
+                WINDOWS -> WindowsNetstatNetworkUtility(runner, toolFinder)
+                MAC, LINUX -> LsofNetworkUtility(runner, toolFinder)
             }
     }
 }
 
-class LsofNetworkUtility(private val runner: CommandLineRunner) : NetworkUtility {
+class LsofNetworkUtility(
+    private val runner: CommandLineRunner,
+    toolFinder: ToolFinder
+) : NetworkUtility {
+
+    init {
+        toolFinder.requireTool("lsof")
+    }
 
     override fun processIdPortMappings(): Iterable<Pair<ProcessId, Port>> {
 
@@ -56,7 +63,14 @@ class LsofNetworkUtility(private val runner: CommandLineRunner) : NetworkUtility
     }
 }
 
-class WindowsNetstatNetworkUtility(private val runner: CommandLineRunner) : NetworkUtility {
+class WindowsNetstatNetworkUtility(
+    private val runner: CommandLineRunner,
+    toolFinder: ToolFinder
+) : NetworkUtility {
+
+    init {
+        toolFinder.requireTool("netstat")
+    }
 
     override fun processIdPortMappings(): Iterable<Pair<ProcessId, Port>> {
 

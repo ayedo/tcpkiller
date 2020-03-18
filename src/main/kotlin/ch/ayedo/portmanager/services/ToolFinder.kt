@@ -1,6 +1,7 @@
 package ch.ayedo.portmanager.services
 
 import ch.ayedo.portmanager.services.OperationSystem.*
+import org.zeroturnaround.exec.InvalidExitValueException
 
 class RequiredToolNotFoundException(name: String) :
     IllegalStateException("Cannot find required commandline tool: $name")
@@ -29,7 +30,7 @@ class WhichToolFinder(private val runner: CommandLineRunner) : ToolFinder {
         return try {
             runner.run("which $name")
             true
-        } catch (ex: Exception) {
+        } catch (ex: InvalidExitValueException) {
             false
         }
     }
@@ -40,7 +41,7 @@ class WhereToolFinder(private val runner: CommandLineRunner) : ToolFinder {
         return try {
             runner.run("where.exe $name")
             true
-        } catch (ex: Exception) {
+        } catch (ex: InvalidExitValueException) {
             false
         }
     }

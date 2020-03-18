@@ -1,20 +1,19 @@
 package ch.ayedo.portmanager.views
 
-import ch.ayedo.portmanager.services.CommandLineRunner
-import ch.ayedo.portmanager.services.OperationSystem
-import ch.ayedo.portmanager.services.ProcessService
-import ch.ayedo.portmanager.services.ProcessTerminator
+import ch.ayedo.portmanager.services.*
 import tornadofx.*
 
 class MainView : View() {
 
-    private val os = OperationSystem.current()
-
     private val runner = CommandLineRunner()
 
-    private val processService = ProcessService.forOperationSystem(os, runner)
+    private val os = OperationSystem.current()
 
-    private val processTerminator = ProcessTerminator.forOperationSystem(os, runner)
+    private val toolFinder = ToolFinder.forOperationSystem(os, runner)
+
+    private val processService = ProcessService.forOperationSystem(os, runner, toolFinder)
+
+    private val processTerminator = ProcessTerminator.forOperationSystem(os, runner, toolFinder)
 
     private val processView = ProcessTableView(processService, processTerminator)
 

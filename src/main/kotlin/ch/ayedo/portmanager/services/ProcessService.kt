@@ -28,13 +28,11 @@ class ProcessService(
 
     companion object {
 
-        fun forOperationSystem(os: OperationSystem, runner: CommandLineRunner): ProcessService {
-
-            val toolFinder = ToolFinder.forOperationSystem(os, runner)
-
+        fun forOperationSystem(os: OperationSystem, runner: CommandLineRunner, toolFinder: ToolFinder): ProcessService {
+            
             val processUtility = ProcessUtility.forOperationSystem(os, runner, toolFinder)
 
-            val networkUtility = NetworkUtility.forOperationSystem(os, runner)
+            val networkUtility = NetworkUtility.forOperationSystem(os, runner, toolFinder)
 
             return ProcessService(
                 networkUtility,
