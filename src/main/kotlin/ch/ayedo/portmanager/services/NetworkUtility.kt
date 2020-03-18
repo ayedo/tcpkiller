@@ -13,7 +13,7 @@ interface NetworkUtility {
      *
      * IMPORTANT: If an Process is listening on both IPv4 and IPv6 only one mapping is expected to be returned
      * **/
-    fun processIdPortMappings(): Iterable<Pair<ProcessId, Port>>
+    fun processIdPortMappings(): Set<Pair<ProcessId, Port>>
 
     companion object {
 
@@ -34,7 +34,7 @@ class LsofNetworkUtility(
         toolFinder.requireTool("lsof")
     }
 
-    override fun processIdPortMappings(): Iterable<Pair<ProcessId, Port>> {
+    override fun processIdPortMappings(): Set<Pair<ProcessId, Port>> {
 
         val lsofResult = runner.run("lsof -a -itcp -nP -sTCP:LISTEN")
         // The expected result of running lsof is expected in the following example format:
@@ -72,7 +72,7 @@ class WindowsNetstatNetworkUtility(
         toolFinder.requireTool("netstat")
     }
 
-    override fun processIdPortMappings(): Iterable<Pair<ProcessId, Port>> {
+    override fun processIdPortMappings(): Set<Pair<ProcessId, Port>> {
 
         val netstatResult = runner.run("netstat -p TCP -anvo")
 
