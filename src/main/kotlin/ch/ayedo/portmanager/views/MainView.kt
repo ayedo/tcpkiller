@@ -3,7 +3,7 @@ package ch.ayedo.portmanager.views
 import ch.ayedo.portmanager.services.ProcessService
 import tornadofx.*
 
-class MainView : View() {
+class MainView : View("Port Manager") {
 
     private val processService = ProcessService.forCurrentOperationSystem()
 
