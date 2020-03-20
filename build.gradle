@@ -1,6 +1,20 @@
+buildscript {
+    dependencies {
+        classpath group: 'de.dynamicfiles.projects.gradle.plugins', name: 'javafx-gradle-plugin', version: '8.8.2'
+    }
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+}
+
 plugins {
+    id 'application'
     id 'org.jetbrains.kotlin.jvm' version '1.3.61'
 }
+
+apply plugin: 'javafx-gradle-plugin'
 
 group 'ch.ayedo'
 version '0.1.0'
@@ -9,14 +23,29 @@ repositories {
     mavenCentral()
 }
 
+jfx {
+    // minimal requirement for jfxJar-task
+    mainClass = 'ch.ayedo.portmanager.PortManagerKt'
+
+    // minimal requirement for jfxNative-task
+    vendor = 'ayedo'
+
+    verbose = true
+}
+
+application {
+    mainClassName = 'ch.ayedo.portmanager.PortManagerKt'
+}
+
 dependencies {
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
-    implementation 'no.tornado:tornadofx:1.7.19'
-    implementation 'com.google.guava:guava:28.2-jre'
-    implementation 'io.reactivex:rxjavafx:2.0.2'
-    implementation 'io.reactivex.rxjava3:rxjava:3.0.0'
-    implementation 'org.zeroturnaround:zt-exec:1.11'
-    implementation 'com.github.doyaaaaaken:kotlin-csv-jvm:0.7.3'
+    runtime 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+    runtime "org.jetbrains.kotlin:kotlin-reflect"
+    runtime 'no.tornado:tornadofx:1.7.19'
+    runtime 'com.google.guava:guava:28.2-jre'
+    runtime 'io.reactivex:rxjavafx:2.0.2'
+    runtime 'io.reactivex.rxjava3:rxjava:3.0.0'
+    runtime 'org.zeroturnaround:zt-exec:1.11'
+    runtime 'com.github.doyaaaaaken:kotlin-csv-jvm:0.7.3'
 }
 
 compileKotlin {
