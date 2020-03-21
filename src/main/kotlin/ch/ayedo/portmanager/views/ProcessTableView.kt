@@ -28,8 +28,11 @@ class ProcessTableView(private val processService: ProcessService) : View() {
         readonlyColumn("Port", PortBinding::port).cellFormat {
             text = it.value.toString()
         }
-        readonlyColumn("Process", PortBinding::process).cellFormat {
+        readonlyColumn("Process Name", PortBinding::process).cellFormat {
             text = it.processName.value
+        }
+        readonlyColumn("Process Id", PortBinding::process).cellFormat {
+            text = it.processId.value.toString()
         }
         resizeColumnsToFitContent()
 
