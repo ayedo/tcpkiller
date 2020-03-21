@@ -42,7 +42,7 @@ dependencies {
     compile 'io.reactivex.rxjava3:rxjava:3.0.0'
     compile 'org.zeroturnaround:zt-exec:1.11'
     compile 'com.github.doyaaaaaken:kotlin-csv-jvm:0.7.3'
-    compile 'org.slf4j:slf4j-simple:1.7.25'
+    runtime 'org.slf4j:slf4j-simple:1.7.25'
 }
 
 compileKotlin {
