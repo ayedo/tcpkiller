@@ -14,7 +14,7 @@ inline class ProcessName(val value: String) : Comparable<ProcessName> {
         val notFound = ProcessName("<< Process name not found >>")
     }
 
-    override fun compareTo(other: ProcessName) = value.compareTo(other.value)
+    override fun compareTo(other: ProcessName) = value.compareTo(other.value, ignoreCase = true)
 }
 
 data class Process(val processId: ProcessId, val processName: ProcessName)
