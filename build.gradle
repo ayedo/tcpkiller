@@ -26,6 +26,7 @@ repositories {
 jfx {
     mainClass = 'ch.ayedo.portmanager.PortManagerKt'
     vendor = 'ayedo'
+    appName = 'PortManager'
 }
 
 application {
