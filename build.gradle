@@ -24,13 +24,8 @@ repositories {
 }
 
 jfx {
-    // minimal requirement for jfxJar-task
     mainClass = 'ch.ayedo.portmanager.PortManagerKt'
-
-    // minimal requirement for jfxNative-task
     vendor = 'ayedo'
-
-    verbose = true
 }
 
 application {
@@ -38,14 +33,14 @@ application {
 }
 
 dependencies {
-    runtime 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
-    runtime "org.jetbrains.kotlin:kotlin-reflect"
-    runtime 'no.tornado:tornadofx:1.7.19'
-    runtime 'com.google.guava:guava:28.2-jre'
-    runtime 'io.reactivex:rxjavafx:2.0.2'
-    runtime 'io.reactivex.rxjava3:rxjava:3.0.0'
-    runtime 'org.zeroturnaround:zt-exec:1.11'
-    runtime 'com.github.doyaaaaaken:kotlin-csv-jvm:0.7.3'
+    compile 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+    compile "org.jetbrains.kotlin:kotlin-reflect"
+    compile 'no.tornado:tornadofx:1.7.19'
+    compile 'com.google.guava:guava:28.2-jre'
+    compile 'io.reactivex:rxjavafx:2.0.2'
+    compile 'io.reactivex.rxjava3:rxjava:3.0.0'
+    compile 'org.zeroturnaround:zt-exec:1.11'
+    compile 'com.github.doyaaaaaken:kotlin-csv-jvm:0.7.3'
 }
 
 compileKotlin {
