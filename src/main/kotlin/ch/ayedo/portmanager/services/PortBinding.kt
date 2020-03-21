@@ -19,4 +19,7 @@ inline class ProcessName(val value: String) : Comparable<ProcessName> {
 
 data class Process(val processId: ProcessId, val processName: ProcessName)
 
-data class PortBinding(val process: Process, val port: Port)
+data class PortBinding(val process: Process, val port: Port) {
+    val processName = process.processName
+    val processId = process.processId
+}
