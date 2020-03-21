@@ -27,6 +27,7 @@ jfx {
     mainClass = 'ch.ayedo.portmanager.PortManagerKt'
     vendor = 'ayedo'
     appName = 'PortManager'
+    usePatchedJFXAntLib = false
 }
 
 application {
