@@ -17,7 +17,7 @@ There are many tools that implement this functionality. This tool will additiona
 
 # Demonstration
 
-![Basic Demonstration of TcpKiller](screencaptures/basic-demonstration.gif&s=200)
+<img src="https://raw.githubusercontent.com/ayedo/tcpkiller/master/screencaptures/basic-demonstration.gif?token=ABEFFFRQETGKEPZ2BVEHDVK6QDF4O" width="640" height="380px"/>
 
 # Installation
 
