@@ -41,9 +41,9 @@ jobs:
 #     - run: ls "C:\Program Files"
 #     - run: ls "C:\Program Files (x86)"
 #     - run: ls "C:\Program Files (x86)\Inno Setup 5"
-    - run: iscc /?
 
-    - run: $Env:Path
+
+#     - run: $Env:Path
 #     - name: Print iscc help  
 #       if: runner.os == 'Windows'
 #       run: C:\Program Files (x86)\Inno Setup 5\bin\iscc.exe /?
