@@ -18,7 +18,7 @@ jobs:
     - name: Setup Java JDK
       uses: actions/setup-java@v1.3.0
       with:
-        java-version: 8.0.222
+        java-version: 10
         java-package: jdk+fx
     
     - name: Uninstall InnoSetup 6
@@ -58,5 +58,5 @@ jobs:
     - run: ls build
     - run: ls build\jfx
     - run: ls build\jfx\app
-    - run: ls build\jfx\app\native
-    - run: ls build\jfx\app\native\TcpKiller
+    - run: ls build\jfx\native
+    - run: ls build\jfx\native\TcpKiller
