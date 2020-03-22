@@ -30,12 +30,7 @@ class ProcessService(
 
     companion object {
 
-        fun forCurrentOperationSystem(): ProcessService {
-            val os = OperationSystem.current()
-            return forOperationSystem(os)
-        }
-
-        private fun forOperationSystem(os: OperationSystem): ProcessService {
+        fun forOperationSystem(os: OperationSystem): ProcessService {
 
             val runner = CommandLineRunner()
 

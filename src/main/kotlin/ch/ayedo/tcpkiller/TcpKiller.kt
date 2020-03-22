@@ -1,5 +1,7 @@
 package ch.ayedo.tcpkiller
 
+import ch.ayedo.tcpkiller.services.OperationSystem
+import ch.ayedo.tcpkiller.services.OperationSystem.MAC
 import ch.ayedo.tcpkiller.views.MainView
 import javafx.scene.image.Image
 import javafx.stage.Stage
@@ -13,10 +15,11 @@ class TcpKiller : App(MainView::class) {
         with(stage) {
             width = 800.0
             height = 600.0
-            title = "TcpKiller"
         }
 
-        stage.icons.add(Image(this::class.java.getResourceAsStream("/logo.png")));
+        if (OperationSystem.current() != MAC) {
+            stage.icons.add(Image(this::class.java.getResourceAsStream("/logo.png")));
+        }
 
         super.start(stage)
     }

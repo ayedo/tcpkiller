@@ -1,15 +1,18 @@
 package ch.ayedo.tcpkiller.views
 
 import ch.ayedo.tcpkiller.services.IanaTcpPortReservations
+import ch.ayedo.tcpkiller.services.OperationSystem
 import ch.ayedo.tcpkiller.services.ProcessService
 import javafx.beans.property.StringProperty
 import javafx.geometry.Pos.BASELINE_RIGHT
 import tornadofx.*
 
 
-class MainView : View("TcpKiller") {
+class MainView : View() {
 
-    private val processService = ProcessService.forCurrentOperationSystem()
+    private val os = OperationSystem.current()
+
+    private val processService = ProcessService.forOperationSystem(os)
 
     private val ianaReservations =
         IanaTcpPortReservations(this.javaClass.getResourceAsStream("/service-names-port-numbers.csv"))
@@ -17,6 +20,8 @@ class MainView : View("TcpKiller") {
     private val processView = ProcessTableView(processService, ianaReservations)
 
     override val root = vbox(10) {
+
+        title = getOsDependentTitle()
 
         style {
             padding = box(10.px)
@@ -47,5 +52,7 @@ class MainView : View("TcpKiller") {
 
         }
     }
+
+    private fun getOsDependentTitle() = if (os == OperationSystem.MAC) "" else "PortKiller"
 }
 

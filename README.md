@@ -1,7 +1,7 @@
-# TCP-Killer
+# TcpKiller
 
-A GUI application to kill an process bound to a tcp port.
+A GUI application to kill a process which is listening on a tcp port.
 
 # Attribution
 
-I would like to thank [Darius Dan](https://www.flaticon.com/free-icon/lighthouse_1793164?term=lighthouse&page=1&position=26) for his logo.
+I would like to thank [Freepik](https://www.flaticon.com/free-icon/star_1747901) for providing the logo for this project.
