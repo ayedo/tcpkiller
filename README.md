@@ -1,4 +1,4 @@
-![TcpKiller Logo](deploy/package/linux/TcpKiller.png)
+![TcpKiller Logo](src/main/deploy/package/linux/TcpKiller.png&s=100)
 
 # TcpKiller
 
@@ -17,7 +17,7 @@ There are many tools that implement this functionality. This tool will additiona
 
 # Demonstration
 
-![Basic Demonstration of TcpKiller](screencaptures/basic-demonstration.gif)
+![Basic Demonstration of TcpKiller](screencaptures/basic-demonstration.gif&s=200)
 
 # Installation
 
