@@ -54,4 +54,6 @@ jobs:
       with:
         arguments: jfxNative
         
-    - run: dir build\jfx\native
+    - run: ls build
+    - run: ls build\jfx
+    - run: ls build\jfx\native
