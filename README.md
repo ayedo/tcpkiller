@@ -17,7 +17,7 @@ There are many tools that implement this functionality. This tool will additiona
 
 # Demonstration
 
-<img src="https://raw.githubusercontent.com/ayedo/tcpkiller/master/screencaptures/basic-demonstration.gif?token=ABEFFFRQETGKEPZ2BVEHDVK6QDF4O" width="640" height="380px"/>
+<img src="https://raw.githubusercontent.com/ayedo/tcpkiller/master/screencaptures/basic-demonstration.gif?token=ABEFFFRQETGKEPZ2BVEHDVK6QDF4O" width="800px" height="600px"/>
 
 # Installation
 
