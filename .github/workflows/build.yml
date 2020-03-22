@@ -44,18 +44,14 @@ jobs:
 #     - name: Install Wixtoolset
 #       if: runner.os == 'Windows'
 #       run: choco install wixtoolset
-    - name: List available
-      uses: eskatos/gradle-command-action@v1
-      with:
-       arguments: jfxListBundlers
+#     - name: List available
+#       uses: eskatos/gradle-command-action@v1
+#       with:
+#        arguments: jfxListBundlers
          
     - name: Run Gradle Build
       uses: eskatos/gradle-command-action@v1
       with:
         arguments: jfxNative
         
-        
-  
-
-    - run: dir build\jfx\native\TcpKiller
-
+    - run: dir build\jfx\native
