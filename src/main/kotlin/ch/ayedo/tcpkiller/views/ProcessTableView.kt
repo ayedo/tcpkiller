@@ -60,6 +60,10 @@ class ProcessTableView(
         resizeColumnsToFitContent()
 
         placeholder = label("No processes found")
+
+        style {
+            fontSize = 14.px
+        }
     }
 
     fun filterByPort(textProperty: ObservableValue<String>) {
