@@ -6,10 +6,11 @@ on:
     
 jobs:
   build:
-    strategy:
-      matrix:
-        os: [ubuntu-18.04, macos-10.15, windows-2019]
-    runs-on: ${{ matrix.os }}
+#     strategy:
+#       matrix:
+#         os: [ubuntu-18.04, macos-10.15, windows-2019]
+#     runs-on: ${{ matrix.os }}
+    runs-on: windows-2019
     
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -21,10 +22,13 @@ jobs:
         java-version: 8.0.222
         java-package: jdk+fx
         
+    - name: Install InnoSetp
+      if: runner.os == 'Windows'
+      run: choco install innosetup --version=5.5.9
+      
     - name: Run Gradle Build
       uses: eskatos/gradle-command-action@v1
       with:
         arguments: jfxNative
 
-    - name: Choco test
-      run: choco -h
+
