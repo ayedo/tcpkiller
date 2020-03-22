@@ -2,8 +2,10 @@ package ch.ayedo.tcpkiller.views
 
 import ch.ayedo.tcpkiller.services.IanaTcpPortReservations
 import ch.ayedo.tcpkiller.services.ProcessService
+import javafx.beans.property.StringProperty
 import javafx.geometry.Pos.BASELINE_RIGHT
 import tornadofx.*
+
 
 class MainView : View("TcpKiller") {
 
@@ -22,6 +24,11 @@ class MainView : View("TcpKiller") {
 
         textfield {
             promptText = "Filter Ports"
+            textProperty().addListener({ observable, oldValue, newValue ->
+                if (newValue.isNotBlank() && !newValue.isInt()) {
+                    (observable as StringProperty).value = oldValue
+                }
+            })
             processView.filterByPort(textProperty())
         }
 
