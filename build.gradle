@@ -28,6 +28,7 @@ jfx {
     vendor = 'ayedo'
     appName = 'TcpKiller'
     usePatchedJFXAntLib = false
+    bundler = 'msi'
 }
 
 application {
