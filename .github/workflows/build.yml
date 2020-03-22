@@ -24,7 +24,7 @@ jobs:
         
     - name: Install InnoSetp
       if: runner.os == 'Windows'
-      run: choco install innosetup --version=5.5.9 --force
+      run: choco install innosetup --version=5.5.9 --force --allow-empty-checksums
       
     - name: Run Gradle Build
       uses: eskatos/gradle-command-action@v1
