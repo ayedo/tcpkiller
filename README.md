@@ -1,4 +1,4 @@
-![TcpKiller Logo](src/main/deploy/package/linux/TcpKiller.png&s=100)
+<img src="https://raw.githubusercontent.com/ayedo/tcpkiller/master/src/main/deploy/package/linux/TcpKiller.png?token=ABEFFFQDQAVYXRAQF3JGPGS6QDESA" width="150" height="150" alt="logo">
 
 # TcpKiller
 
