@@ -1,4 +1,4 @@
-package ch.ayedo.portmanager.services
+package ch.ayedo.tcpkiller.services
 
 class ProcessService(
     private val networkUtility: NetworkUtility,

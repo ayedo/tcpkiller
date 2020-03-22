@@ -24,14 +24,14 @@ repositories {
 }
 
 jfx {
-    mainClass = 'ch.ayedo.portmanager.PortManagerKt'
+    mainClass = 'ch.ayedo.tcpkiller.TcpKillerKt'
     vendor = 'ayedo'
-    appName = 'PortManager'
+    appName = 'TcpKiller'
     usePatchedJFXAntLib = false
 }
 
 application {
-    mainClassName = 'ch.ayedo.portmanager.PortManagerKt'
+    mainClassName = 'ch.ayedo.tcpkiller.TcpKillerKt'
 }
 
 dependencies {

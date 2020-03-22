@@ -1,7 +1,7 @@
-package ch.ayedo.portmanager.services
+package ch.ayedo.tcpkiller.services
 
-import ch.ayedo.portmanager.services.OperationSystem.*
-import ch.ayedo.portmanager.whitespaceRegex
+import ch.ayedo.tcpkiller.services.OperationSystem.*
+import ch.ayedo.tcpkiller.whitespaceRegex
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 
 interface ProcessUtility {
@@ -76,7 +76,7 @@ class TasklistProcessUtility(
     private val csvReader = csvReader()
 
     override fun processNamesById(): Map<ProcessId, ProcessName> {
-        
+
         val tasklistResult = runner.run("tasklist /svc /fo csv")
 
         val rows = csvReader.readAllWithHeader(tasklistResult)

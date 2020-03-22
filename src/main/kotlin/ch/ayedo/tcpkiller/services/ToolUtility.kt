@@ -1,6 +1,6 @@
-package ch.ayedo.portmanager.services
+package ch.ayedo.tcpkiller.services
 
-import ch.ayedo.portmanager.services.OperationSystem.*
+import ch.ayedo.tcpkiller.services.OperationSystem.*
 import org.zeroturnaround.exec.InvalidExitValueException
 
 class RequiredToolNotFoundException(name: String) :

@@ -1,8 +1,8 @@
-package ch.ayedo.portmanager.views
+package ch.ayedo.tcpkiller.views
 
-import ch.ayedo.portmanager.services.IanaTcpPortReservations
-import ch.ayedo.portmanager.services.PortBinding
-import ch.ayedo.portmanager.services.ProcessService
+import ch.ayedo.tcpkiller.services.IanaTcpPortReservations
+import ch.ayedo.tcpkiller.services.PortBinding
+import ch.ayedo.tcpkiller.services.ProcessService
 import com.google.common.collect.Sets
 import io.reactivex.rxjava3.core.Observable
 import javafx.application.Platform

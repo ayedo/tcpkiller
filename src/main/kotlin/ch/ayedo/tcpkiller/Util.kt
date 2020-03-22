@@ -1,3 +1,3 @@
-package ch.ayedo.portmanager
+package ch.ayedo.tcpkiller
 
 val whitespaceRegex = "\\s+".toRegex()

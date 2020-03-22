@@ -1,4 +1,4 @@
-package ch.ayedo.portmanager.services
+package ch.ayedo.tcpkiller.services
 
 inline class Port(val value: Int) : Comparable<Port> {
     override fun compareTo(other: Port) = value.compareTo(other.value)

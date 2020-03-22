@@ -1,6 +1,6 @@
-# PortManager
+# TCP-Killer
 
-A GUI application to kill an process bound to a port.
+A GUI application to kill an process bound to a tcp port.
 
 # Attribution
 

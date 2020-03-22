@@ -1,6 +1,6 @@
-package ch.ayedo.portmanager.services
+package ch.ayedo.tcpkiller.services
 
-import ch.ayedo.portmanager.whitespaceRegex
+import ch.ayedo.tcpkiller.whitespaceRegex
 import org.zeroturnaround.exec.ProcessExecutor
 
 class CommandLineRunner {

@@ -1,6 +1,6 @@
-package ch.ayedo.portmanager.services
+package ch.ayedo.tcpkiller.services
 
-import ch.ayedo.portmanager.services.IanaTcpPortReservations.CsvHeaders.*
+import ch.ayedo.tcpkiller.services.IanaTcpPortReservations.CsvHeaders.*
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.google.common.collect.HashMultimap
 import com.google.common.collect.Multimap
