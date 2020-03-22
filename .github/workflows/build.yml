@@ -36,7 +36,12 @@ jobs:
     - name: Add to path
       if: runner.os == 'Windows'
       run: echo "##[add-path]C:\Program Files (x86)\Inno Setup 5\bin"
-     
+    
+    - run: ls C:\
+    - run: ls C:\Program Files (x86)
+    - run: ls C:\Program Files (x86)\Inno Setup 5
+    - run: ls C:\Program Files (x86)\Inno Setup 5\bin"
+
     - run: $Env:Path
 #     - name: Print iscc help  
 #       if: runner.os == 'Windows'
