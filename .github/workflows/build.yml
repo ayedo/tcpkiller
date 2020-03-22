@@ -27,6 +27,6 @@ jobs:
         
     - run: ls build
     - run: ls build/jfx
-    - run: ls build/jfx\app
-    - run: ls build/jfx\native
-    - run: ls build/jfx\native\TcpKiller
+    - run: ls build/jfx/app
+    - run: ls build/jfx/native
+    - run: ls build/jfx/native/TcpKiller
