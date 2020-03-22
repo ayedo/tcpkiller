@@ -20,8 +20,12 @@ jobs:
       with:
         java-version: 8.0.222
         java-package: jdk+fx
-        
-    - name: Install InnoSetup
+    
+    - name: Uninstall InnoSetup 6
+      if: runner.os == 'Windows'
+      run: choco uninstall innosetup
+    
+    - name: Install InnoSetup 5
       if: runner.os == 'Windows'
       run: choco install innosetup --version=5.5.9 --force --allow-empty-checksums
       
