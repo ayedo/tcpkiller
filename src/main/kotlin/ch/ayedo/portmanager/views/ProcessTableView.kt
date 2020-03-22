@@ -1,5 +1,6 @@
 package ch.ayedo.portmanager.views
 
+import ch.ayedo.portmanager.services.IanaTcpPortReservations
 import ch.ayedo.portmanager.services.PortBinding
 import ch.ayedo.portmanager.services.ProcessService
 import com.google.common.collect.Sets
@@ -7,9 +8,12 @@ import io.reactivex.rxjava3.core.Observable
 import javafx.application.Platform
 import javafx.beans.value.ObservableValue
 import tornadofx.*
-import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeUnit.SECONDS
 
-class ProcessTableView(private val processService: ProcessService) : View() {
+class ProcessTableView(
+    private val processService: ProcessService,
+    private val ianaReservations: IanaTcpPortReservations
+) : View() {
 
     private val portBindings = processService.processPortBindings().toList().asObservable()
 
@@ -19,22 +23,40 @@ class ProcessTableView(private val processService: ProcessService) : View() {
         Observable.interval(
             1,
             1,
-            TimeUnit.SECONDS
+            SECONDS
         ).subscribe({ reloadBindings() })
 
     }
 
     override val root = tableview(sortedPortBindings) {
+
         setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE)
-        readonlyColumn("Port", PortBinding::port).cellFormat {
-            text = it.value.toString()
+
+        readonlyColumn("Port", PortBinding::port).cellFormat { port ->
+
+            val intPort = port.value
+
+            text = intPort.toString()
+
+            val reservation = ianaReservations.reservations[port]
+
+            val tooltipText = if (reservation.isNotEmpty()) {
+                reservation.joinToString("\n", transform = { it.description })
+            } else {
+                "No IANA reservations found for port $intPort"
+            }
+
+            tooltip(tooltipText)
+
         }
-        readonlyColumn("Process Name", PortBinding::processName).cellFormat {
-            text = it.value
+
+        readonlyColumn("Process Name", PortBinding::processName).cellFormat { processName ->
+            text = processName.value
         }
-        readonlyColumn("Process Id", PortBinding::processId).cellFormat {
-            text = it.value.toString()
+        readonlyColumn("Process Id", PortBinding::processId).cellFormat { processId ->
+            text = processId.value.toString()
         }
+
         resizeColumnsToFitContent()
 
         placeholder = label("No processes found")

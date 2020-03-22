@@ -1,5 +1,6 @@
 package ch.ayedo.portmanager.views
 
+import ch.ayedo.portmanager.services.IanaTcpPortReservations
 import ch.ayedo.portmanager.services.ProcessService
 import tornadofx.*
 
@@ -7,7 +8,10 @@ class MainView : View("Port Manager") {
 
     private val processService = ProcessService.forCurrentOperationSystem()
 
-    private val processView = ProcessTableView(processService)
+    private val ianaReservations =
+        IanaTcpPortReservations(this.javaClass.getResourceAsStream("/service-names-port-numbers.csv"))
+
+    private val processView = ProcessTableView(processService, ianaReservations)
 
     override val root = vbox(10) {
 
@@ -25,7 +29,7 @@ class MainView : View("Port Manager") {
 
         add(processView)
 
-        button("End Task") {
+        button("End Process") {
             action {
                 processView.killSelectedProcess()
             }
