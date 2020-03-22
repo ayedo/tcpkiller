@@ -31,7 +31,7 @@ jobs:
  
     - name: ls innosetup
       if: runner.os == 'Windows'
-      run: dir C:\Program Files (x86)\Inno Setup 5
+      run: cd C:\Program Files (x86)\Inno Setup 5; dir
     
     - name: Add to path
       if: runner.os == 'Windows'
