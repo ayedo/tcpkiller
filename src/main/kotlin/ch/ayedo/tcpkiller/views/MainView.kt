@@ -2,6 +2,7 @@ package ch.ayedo.tcpkiller.views
 
 import ch.ayedo.tcpkiller.services.IanaTcpPortReservations
 import ch.ayedo.tcpkiller.services.ProcessService
+import javafx.geometry.Pos.BASELINE_RIGHT
 import tornadofx.*
 
 class MainView : View("TcpKiller") {
@@ -29,12 +30,15 @@ class MainView : View("TcpKiller") {
 
         add(processView)
 
-        button("End Process") {
-            action {
-                processView.killSelectedProcess()
+        hbox {
+            alignment = BASELINE_RIGHT
+            button("End Process") {
+                action {
+                    processView.killSelectedProcess()
+                }
             }
-        }
 
+        }
     }
 }
 
