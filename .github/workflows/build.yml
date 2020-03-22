@@ -13,7 +13,6 @@ jobs:
     runs-on: windows-2019
     
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
 
     - name: Setup Java JDK
@@ -22,13 +21,22 @@ jobs:
         java-version: 8.0.222
         java-package: jdk+fx
         
-    - name: Install InnoSetp
+    - name: Install InnoSetup
       if: runner.os == 'Windows'
       run: choco install innosetup --version=5.5.9 --force --allow-empty-checksums
+      
+    - name: Print iscc help  
+      if: runner.os == 'Windows'
+      run: C:\ProgramData\Chocolatey\bin\iscc.exe /?
+      
+    - name: Install Wixtoolset
+      if: runner.os == 'Windows'
+      run: choco install wixtoolset
       
     - name: Run Gradle Build
       uses: eskatos/gradle-command-action@v1
       with:
         arguments: jfxNative
 
+    - run: dir build\jfx\native
 
