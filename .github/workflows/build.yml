@@ -6,11 +6,10 @@ on:
     
 jobs:
   build:
-#     strategy:
-#       matrix:
-#         os: [ubuntu-18.04, macos-10.15, windows-2019]
-#     runs-on: ${{ matrix.os }}
-    runs-on: windows-2019
+    strategy:
+      matrix:
+        os: [ubuntu-18.04, macos-10.15]
+    runs-on: ${{ matrix.os }}
     
     steps:
     - uses: actions/checkout@v2
@@ -20,42 +19,7 @@ jobs:
       with:
         java-version: 8
         java-package: jdk+fx
-    
-    - name: Uninstall InnoSetup 6
-      if: runner.os == 'Windows'
-      run: choco uninstall innosetup
-    
-    - name: Install InnoSetup 5
-      if: runner.os == 'Windows'
-      run: choco install innosetup --version=5.5.9 --force --allow-empty-checksums
- 
-    - name: ls innosetup
-      if: runner.os == 'Windows'
-      run: pwd
-    
-    - name: Add to path
-      if: runner.os == 'Windows'
-      run: echo "##[add-path]C:\Program Files (x86)\Inno Setup 5\"
-    
-#     - run: ls C:\
-#     - run: ls "C:\Program Files"
-#     - run: ls "C:\Program Files (x86)"
-#     - run: ls "C:\Program Files (x86)\Inno Setup 5"
 
-
-#     - run: $Env:Path
-#     - name: Print iscc help  
-#       if: runner.os == 'Windows'
-#       run: C:\Program Files (x86)\Inno Setup 5\bin\iscc.exe /?
-      
-#     - name: Install Wixtoolset
-#       if: runner.os == 'Windows'
-#       run: choco install wixtoolset
-#     - name: List available
-#       uses: eskatos/gradle-command-action@v1
-#       with:
-#        arguments: jfxListBundlers
-         
     - name: Run Gradle Build
       uses: eskatos/gradle-command-action@v1
       with:
