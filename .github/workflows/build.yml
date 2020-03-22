@@ -29,17 +29,17 @@ jobs:
       if: runner.os == 'Windows'
       run: choco install innosetup --version=5.5.9 --force --allow-empty-checksums
  
-    - name: ls innosetup
-      if: runner.os == 'Windows'
-      run: cd C:\Program Files (x86)\Inno Setup 5; dir
+#     - name: ls innosetup
+#       if: runner.os == 'Windows'
+#       run: cd C:\Program Files (x86)\Inno Setup 5; dir
     
-    - name: Add to path
-      if: runner.os == 'Windows'
-      run: echo "##[add-path]C:\Program Files (x86)\Inno Setup 5\bin"
+#     - name: Add to path
+#       if: runner.os == 'Windows'
+#       run: echo "##[add-path]C:\Program Files (x86)\Inno Setup 5\bin"
       
-    - name: Print iscc help  
-      if: runner.os == 'Windows'
-      run: C:\Program Files (x86)\Inno Setup 5\bin\iscc.exe /?
+#     - name: Print iscc help  
+#       if: runner.os == 'Windows'
+#       run: C:\Program Files (x86)\Inno Setup 5\bin\iscc.exe /?
       
     - name: Install Wixtoolset
       if: runner.os == 'Windows'
