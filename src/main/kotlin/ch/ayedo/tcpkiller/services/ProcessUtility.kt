@@ -54,12 +54,13 @@ class PsProcessUtility(
             .map(String::trim)
 
         return rows.map({ row ->
-            val columns = row.split(whitespaceRegex)
+
+            val columns = row.split(whitespaceRegex, 2)
             val pid = columns[0].toInt()
             val name = columns[1]
-            ProcessId(pid) to ProcessName(
-                name
-            )
+
+            ProcessId(pid) to ProcessName(name)
+
         }).toMap()
     }
 }
