@@ -78,14 +78,14 @@ class TasklistProcessUtility(
 
     override fun processNamesById(): Map<ProcessId, ProcessName> {
 
-        val tasklistResult = runner.run("tasklist /svc /fo csv")
+        val tasklistResult = runner.run("tasklist /svc /fo csv /nh")
 
-        val rows = csvReader.readAllWithHeader(tasklistResult)
+        val rows = csvReader.readAll(tasklistResult)
 
         return rows.map({ row ->
-            val pid = row.getValue("PID").toInt()
-            val imageName = row.getValue("Image Name")
-            val services = row.getValue("Services")
+            val pid = row[0].toInt()
+            val imageName = row[1]
+            val services = row[2]
 
             val name = imageName + if (services == "N/A") "" else " ($services)"
 
