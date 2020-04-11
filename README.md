@@ -52,7 +52,7 @@ Successfully tested on: Windows 10
 On Windows some services are started by the operation system under the system process which cannot be terminated by TcpKiller.
 
 TcpKiller may still help you find the culprit:
-1. Hover over the port number. If it's a registered IANA port, it will tell you it's name which could help you find out which service is listening on the port.
+1. Hover over the port number. If it's a registered IANA port, it will tell you its name which could help you find out which service is listening on the port.
 2. If it's a non IANA registered port, it could be `http.sys`, which is the windows integrated http server infrastructure. Run `netsh http show servicestate`. If there is a process listening through `http.sys`, you should be able to see it under 'request queue'.
 
 # Attribution
