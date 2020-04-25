@@ -83,8 +83,8 @@ class TasklistProcessUtility(
         val rows = csvReader.readAll(tasklistResult)
 
         return rows.map({ row ->
-            val pid = row[0].toInt()
-            val imageName = row[1]
+            val imageName = row[0]
+            val pid = row[1].toInt()
             val services = row[2]
 
             val name = imageName + if (services == "N/A") "" else " ($services)"
